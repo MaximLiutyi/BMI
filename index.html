@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <!-- Підключення Brython -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.5/brython.min.js"></script>
+</head>
+<body onload="brython()">
+
+    <h1>BMI Calculator</h1>
+
+    <!-- Поля для введення -->
+    <p>Enter your weight (kg): <input id="weight" type="number"></p>
+    <p>Enter your height (m): <input id="height" type="number" step="0.01"></p>
+
+    <!-- Кнопка для запуску коду -->
+    <button id="calculate-btn">Calculate BMI</button>
+
+    <!-- Поле для виводу результату -->
+    <p id="result">Your BMI = </p>
+    <p id="advice"></p>
+
+    <!-- Ваш Python код -->
+    <script type="text/python">
+        from browser import document, alert
+
+        def calculate_bmi(event):
+            try:
+                # Зчитування даних з полів
+                weight = int(document["weight"].value)
+                height = float(document["height"].value)
+
+                # Розрахунок ІМТ
+                bmi = weight / (height ** 2)
+                bmi_rounded = round(bmi)
+
+                # Виведення результату ІМТ
+                document["result"].text = f"Your BMI = {bmi_rounded}"
+
+                # Виведення поради
+                if bmi < 18.5:
+                    advice = "У вас недостатня вага"
+                elif 18.5 <= bmi <= 24.9:
+                    advice = "У вас нормальна вага"
+                elif bmi >= 25:
+                    advice = "У вас надмірна вага"
+
+                document["advice"].text = advice
+
+            except ValueError:
+                alert("Будь ласка, введіть коректні значення.")
+
+        # Зв'язування кнопки з функцією
+        document["calculate-btn"].bind("click", calculate_bmi)
+    </script>
+
+</body>
+</html>
