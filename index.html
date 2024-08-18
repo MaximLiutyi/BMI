@@ -6,19 +6,32 @@
     <title>BMI Calculator</title>
     <!-- Підключення Brython -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.5/brython.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #result {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body onload="brython()">
 
     <h1>BMI Calculator</h1>
 
-    <!-- Поля для введення -->
-    <p>Enter your weight (kg): <input id="weight" type="number"></p>
+    <p>Enter your weight (kg): <input id="weight" type="number" step="0.1"></p>
     <p>Enter your height (m): <input id="height" type="number" step="0.01"></p>
 
-    <!-- Кнопка для запуску коду -->
     <button id="calculate-btn">Calculate BMI</button>
 
-    <!-- Поле для виводу результату -->
     <p id="result">Your BMI = </p>
     <p id="advice"></p>
 
@@ -29,12 +42,15 @@
         def calculate_bmi(event):
             try:
                 # Зчитування даних з полів
-                weight = int(document["weight"].value)
+                weight = float(document["weight"].value)
                 height = float(document["height"].value)
+
+                if height == 0:
+                    raise ValueError("Height cannot be zero.")
 
                 # Розрахунок ІМТ
                 bmi = weight / (height ** 2)
-                bmi_rounded = round(bmi)
+                bmi_rounded = round(bmi, 1)
 
                 # Виведення результату ІМТ
                 document["result"].text = f"Your BMI = {bmi_rounded}"
@@ -49,8 +65,8 @@
 
                 document["advice"].text = advice
 
-            except ValueError:
-                alert("Будь ласка, введіть коректні значення.")
+            except ValueError as e:
+                alert(f"Error: {e}")
 
         # Зв'язування кнопки з функцією
         document["calculate-btn"].bind("click", calculate_bmi)
